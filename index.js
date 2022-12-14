@@ -1,11 +1,11 @@
-document.getElementById("token-input").value = getCookie('OpenAIBearer');
+document.getElementById("key-input").value = getCookie('OpenAIBearer');
 
 document.getElementById('image-input').addEventListener('change', e => {
     processImage(e.target.files[0]);
 });
 
-document.getElementById('token-submit').addEventListener('click', e => {
-    setTokenCookie();
+document.getElementById('key-submit').addEventListener('click', e => {
+    setKeyCookie();
 
     document.getElementById('image-input').value = null;
     document.getElementById("error").hidden = true;
@@ -27,13 +27,13 @@ function getCookie(cname) {
     return "";
 }
 
-function setTokenCookie() {
-    const token = document.querySelector('#token-input').value;
+function setKeyCookie() {
+    const token = document.querySelector('#key-input').value;
     document.cookie = "OpenAIBearer=" + token;
 }
 
 async function processImage(image) {
-    setTokenCookie()
+    setKeyCookie()
     document.getElementById("error").hidden = true;
     Tesseract.recognize(
         image, "eng"
