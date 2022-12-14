@@ -1,8 +1,40 @@
-document.querySelector('input[type="file"]').addEventListener('change', e => {
+document.getElementById("token-input").value = getCookie('OpenAIBearer');
+
+document.getElementById('image-input').addEventListener('change', e => {
     processImage(e.target.files[0]);
 });
 
+document.getElementById('token-submit').addEventListener('click', e => {
+    setTokenCookie();
+
+    document.getElementById('image-input').value = null;
+    document.getElementById("error").hidden = true;
+});
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function setTokenCookie() {
+    const token = document.querySelector('#token-input').value;
+    document.cookie = "OpenAIBearer=" + token;
+}
+
 async function processImage(image) {
+    setTokenCookie()
+    document.getElementById("error").hidden = true;
     Tesseract.recognize(
         image, "eng"
     ).then(async ({data: {text}}) => {
@@ -38,7 +70,7 @@ async function processImage(image) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer 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'
+                    'Authorization': "Bearer " + getCookie('OpenAIBearer')
                 },
                 body: JSON.stringify({
                     'model': 'text-davinci-003',
@@ -51,6 +83,11 @@ async function processImage(image) {
                 })
             });
             let responseJson = await response.json();
+
+            if (JSON.stringify(responseJson).includes("Incorrect API key provided")) {
+                document.getElementById("error").hidden = false;
+                return
+            }
 
             console.log(question + ": " + responseJson['choices'][0]['text']);
 

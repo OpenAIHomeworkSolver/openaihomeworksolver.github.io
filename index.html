@@ -2,14 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>OpenAI Homework Solver</title>
 </head>
 <body>
-    <input type="file" accept="image/*">
-    <div id="new">
+<h1>Enter Your Token:</h1>
 
-    </div>
-    <script type="module" src="index.js"></script>
-    <script src="js/tesseract.min.js"></script>
+<label for="token-input"></label><input type="text" name="token" id="token-input"/>
+<input type="submit" value="Save Token" id="token-submit"/>
+
+<h1>Add Your Image:</h1>
+<input type="file" accept="image/*" id="image-input">
+
+<h1 style="color: red;" hidden id="error">Error: Incorrect API Key</h1>
+<h1>Generated Answers:</h1>
+<div id="new">
+
+</div>
+
+<script type="module" src="index.js"></script>
+<script src="js/tesseract.min.js"></script>
 </body>
 </html>
